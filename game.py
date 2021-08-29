@@ -21,6 +21,13 @@ class Game :
         player_position = tmx_data.get_object_by_name("Spawn")
         self.player = Player(player_position.x, player_position.y)
 
+        #define a list of collision objects
+
+        self.walls = []
+        for obj in tmx_data.objects:
+            if obj.type == "collision":
+                self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
         #draw calque groupe
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer =3)
         self.group.add(self.player)
