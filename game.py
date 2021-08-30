@@ -120,7 +120,7 @@ class Game :
 
         spawn_house_point = tmx_data.get_object_by_name('enter_house_exit')
         self.player.position[0] = spawn_house_point.x
-        self.player.position[1] = spawn_house_point.y + 20
+        self.player.position[1] = spawn_house_point.y + 10
 
 
     def update(self):
@@ -128,13 +128,13 @@ class Game :
 
         #verification of house entrance collision
 
-        if self.map == 'map' and self.player.feet.collidelist(self.enter_house_rect)>-1:
+        if self.map == 'map' and self.player.feet.colliderect(self.enter_house_rect):
             self.switch_house()
             self.map = 'house'
 
         #verification of house entrance collision
 
-        if self.map == 'house' and self.player.feet.collidelist(self.enter_house_rect)>-1:
+        if self.map == 'house' and self.player.feet.colliderect(self.enter_house_rect):
             self.switch_world()
             self.map = 'map'
 

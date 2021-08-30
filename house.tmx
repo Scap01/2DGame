@@ -125,7 +125,7 @@
   <object id="5" name="collision" x="159" y="108" width="47.5" height="17"/>
   <object id="6" name="collision" x="279" y="89" width="46.5" height="34"/>
   <object id="7" name="collision" x="237.5" y="45.5" width="143.5" height="31"/>
-  <object id="8" name="entrance_house" x="79.5" y="357.5">
+  <object id="8" name="spawn_house" x="79.5" y="357.5">
    <point/>
   </object>
   <object id="9" name="exit_house" x="65.5" y="368.5" width="30" height="13.5"/>
