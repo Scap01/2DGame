@@ -123,6 +123,7 @@ class Game :
         self.player.position[1] = spawn_house_point.y + 10
 
 
+
     def update(self):
         self.group.update()
 
