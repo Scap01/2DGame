@@ -12,6 +12,7 @@ class Game :
         pygame.display.set_caption("2dg - beta")
 
         #load map (tmx)
+        self.map = 'map'
         tmx_data = pytmx.util_pygame.load_pygame('map.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
@@ -29,8 +30,13 @@ class Game :
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
 
         #draw calque groupe
-        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer =4)
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer =5)
         self.group.add(self.player)
+
+        #define collistion rect for entrance
+
+        enter_house = tmx_data.get_object_by_name("enter_house")
+        self.enter_house_rect = pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height)
 
     def handle_input(self):
         pressed = pygame.key.get_pressed()
@@ -48,8 +54,89 @@ class Game :
             self.player.move_right()
             self.player.change_animation('right')
 
+    def switch_house(self):
+        #creating game window
+        self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("2dg - beta")
+
+        #load map (tmx)
+        tmx_data = pytmx.util_pygame.load_pygame('house.tmx')
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
+        map_layer.zoom = 2
+        self.map = 'house'
+
+        #define a list of collision objects
+
+        self.walls = []
+        for obj in tmx_data.objects:
+            if obj.name == "collision":
+                self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
+        #draw calque groupe
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer =5)
+        self.group.add(self.player)
+
+        #define collistion rect for entrance
+
+        exit_house = tmx_data.get_object_by_name("exit_house")
+        self.enter_house_rect = pygame.Rect(exit_house.x, exit_house.y, exit_house.width, exit_house.height)
+
+        #get spawn point in the house
+
+        spawn_house_point = tmx_data.get_object_by_name('spawn_house')
+        self.player.position[0] = spawn_house_point.x
+        self.player.position[1] = spawn_house_point.y - 20
+
+    def switch_world(self):
+        #creating game window
+        self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("2dg - beta")
+
+        #load map (tmx)
+        tmx_data = pytmx.util_pygame.load_pygame('map.tmx')
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
+        map_layer.zoom = 2
+        self.map = 'map'
+
+        #define a list of collision objects
+
+        self.walls = []
+        for obj in tmx_data.objects:
+            if obj.name == "collision":
+                self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
+        #draw calque groupe
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer =5)
+        self.group.add(self.player)
+
+        #define collistion rect for entrance
+
+        exit_house = tmx_data.get_object_by_name("enter_house")
+        self.enter_house_rect = pygame.Rect(exit_house.x, exit_house.y, exit_house.width, exit_house.height)
+
+        #get spawn point outside the house
+
+        spawn_house_point = tmx_data.get_object_by_name('enter_house_exit')
+        self.player.position[0] = spawn_house_point.x
+        self.player.position[1] = spawn_house_point.y + 20
+
+
     def update(self):
         self.group.update()
+
+        #verification of house entrance collision
+
+        if self.map == 'map' and self.player.feet.collidelist(self.enter_house_rect)>-1:
+            self.switch_house()
+            self.map = 'house'
+
+        #verification of house entrance collision
+
+        if self.map == 'house' and self.player.feet.collidelist(self.enter_house_rect)>-1:
+            self.switch_world()
+            self.map = 'map'
 
         #verification of collision
 
